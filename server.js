@@ -42,13 +42,13 @@ const startServer = async () => {
   app.listen(PORT, async () => {
     console.log(`Server running on port ${PORT}`);
 
-    try {
-      // Start ngrok and get public URL
-      const url = await ngrok.connect(PORT);
-      console.log(`Public URL: ${url}`);
-    } catch (err) {
-      console.error('Error starting ngrok:', err);
-    }
+//    try {
+//      // Start ngrok and get public URL
+//      const url = await ngrok.connect(PORT);
+//      console.log(`Public URL: ${url}`);
+//    } catch (err) {
+//      console.error('Error starting ngrok:', err);
+//    }
   });
 };
 
