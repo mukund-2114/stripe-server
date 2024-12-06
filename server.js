@@ -6,19 +6,15 @@ const app = express();
 app.use(express.json());
 
 app.post('/payment-sheet', async (req, res) => {
+  const { amount } = req.body; // Get amount from client request
   try {
-    // Create a new Stripe customer
     const customer = await stripe.customers.create();
-
-    // Create an ephemeral key for the customer
     const ephemeralKey = await stripe.ephemeralKeys.create(
       { customer: customer.id },
       { apiVersion: '2024-11-20.acacia' }
     );
-
-    // Create a PaymentIntent for the customer
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 1099, // Amount in smallest currency unit (e.g., cents for USD)
+      amount: amount, // Use dynamic amount
       currency: 'CAD',
       customer: customer.id,
       automatic_payment_methods: { enabled: true },
@@ -28,13 +24,14 @@ app.post('/payment-sheet', async (req, res) => {
       paymentIntent: paymentIntent.client_secret,
       ephemeralKey: ephemeralKey.secret,
       customer: customer.id,
-      publishableKey: 'pk_test_51QSkdU08evr3liOEcMDOUvK9g1Kj7AuxTO8YFDTvQq87ZlU9VIfHhLipbCu9U1iS9ib1xtjLPSygv6Uwok2R8yOj00HDUlKygd'
+      publishableKey: 'pk_test_51QSkdU08evr3liOEcMDOUvK9g1Kj7AuxTO8YFDTvQq87ZlU9VIfHhLipbCu9U1iS9ib1xtjLPSygv6Uwok2R8yOj00HDUlKygd',
     });
   } catch (error) {
     console.error('Error creating payment sheet:', error);
     res.status(500).json({ error: error.message });
   }
 });
+
 
 // Start the server and ngrok
 const startServer = async () => {
